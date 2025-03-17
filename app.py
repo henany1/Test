@@ -9,8 +9,12 @@ app = Flask(__name__, template_folder="templates")
 # Load environment variables from .env file
 load_dotenv()
 
-# Get API Key from .env
+# Use API key from .env (local) or GitHub Secrets (production)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Check if key is missing
+if not OPENAI_API_KEY:
+    raise ValueError("⚠️ OpenAI API Key is missing! Set it in .env or GitHub Secrets.")
 
 # Initialize OpenAI client
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
