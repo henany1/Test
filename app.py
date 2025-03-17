@@ -1,11 +1,18 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, send_from_directory
 import openai
+import os
+from dotenv import load_dotenv
 
 # Initialize Flask App
 app = Flask(__name__, template_folder="templates")
 
-# OpenAI API Key (Replace with your actual key)
-OPENAI_API_KEY = "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"
+# Load environment variables from .env file
+load_dotenv()
+
+# Get API Key from .env
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Initialize OpenAI client
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 # Function to generate 10 dynamic personality-related questions using OpenAI
@@ -19,7 +26,7 @@ def generate_questions():
     4.How old are you?
     5.Do you prefer scents that are fresh and airy, deep and woody, floral and delicate, or warm and sweet?
     6.If your personality were a weather type (sunny, rainy, stormy, breezy, etc.), what would it be?
-    7.What setting did you grow up in?
+    7.What Country did you grow up in?
     8.Would you rather your perfume be soft and subtle or bold and long-lasting?
     9.If your personality had a musical genre, what would it be? (e.g., jazz, rock, classical, pop)
     10.Which of these best describes you: adventurous explorer, cozy homebody, elegant and sophisticated, or free-spirited dreamer?
@@ -62,7 +69,8 @@ def generate_perfume_formula(user_answers):
 # Flask route to serve frontend
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory(os.getcwd(), "index.html")
+
 
 # API Route to start personality quiz
 @app.route('/start', methods=['GET'])
