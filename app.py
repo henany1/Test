@@ -6,18 +6,23 @@ from dotenv import load_dotenv
 # Initialize Flask App
 app = Flask(__name__, template_folder="templates")
 
-# Load environment variables from .env file
+import os
+from dotenv import load_dotenv
+
+# Load .env for local development
 load_dotenv()
 
-# Use API key from .env (local) or GitHub Secrets (production)
+# Read API key from environment variables (GitHub Secrets) or .env
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Check if key is missing
 if not OPENAI_API_KEY:
     raise ValueError("⚠️ OpenAI API Key is missing! Set it in .env or GitHub Secrets.")
 
-# Initialize OpenAI client
+# Initialize OpenAI Client
+import openai
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
 
 # Function to generate 10 dynamic personality-related questions using OpenAI
 def generate_questions():
