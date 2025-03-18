@@ -75,6 +75,7 @@ def generate_perfume_formula(user_answers):
 
     return response.choices[0].message.content
 
+
 # Flask route to serve frontend
 @app.route('/')
 def index():
