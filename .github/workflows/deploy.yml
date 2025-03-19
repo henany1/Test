@@ -16,7 +16,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install openai python-dotenv flask  # Install dependencies directly
+          pip install openai python-dotenv flask gunicorn flask-cors # Install dependencies directly
 
       - name: Set OpenAI API Key as an Environment Variable
         run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
