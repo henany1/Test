@@ -4,21 +4,25 @@ on: [push]  # Runs when code is pushed to GitHub
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Runs on GitHub's Ubuntu machine
+    runs-on: ubuntu-latest  # Use GitHub’s Ubuntu runner
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3  # Fetch the repository code
+        uses: actions/checkout@v3  # Fetch the latest code
 
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.9'  # Adjust if needed
+          python-version: '3.9'  # Adjust Python version if needed
 
       - name: Install Dependencies
-        run: pip install openai python-dotenv flask  # Directly install necessary packages
+        run: |
+          pip install openai python-dotenv flask  # Install dependencies directly
 
       - name: Set OpenAI API Key as an Environment Variable
         run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
 
-      - name: Run the App
-        run: python app.py  # This will now have access to the API key
+      - name: Run the App in the Background
+        run: |
+          python app.py &  # The '&' runs Flask in the background
+          sleep 10  # Wait for Flask to start
+          curl http://127.0.0.1:5000  # Test if the app is running
