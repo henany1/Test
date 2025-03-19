@@ -1,0 +1,24 @@
+name: Deploy App
+
+on: [push]  # Runs when code is pushed to GitHub
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Runs on GitHub's Ubuntu machine
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3  # Fetch the repository code
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'  # Adjust if needed
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt  # Install dependencies
+
+      - name: Set OpenAI API Key as an Environment Variable
+        run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Run the App
+        run: python app.py  # This will now have access to the API key
