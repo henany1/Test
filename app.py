@@ -2,22 +2,25 @@ from flask import Flask, request, jsonify, send_from_directory
 import openai
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS
+import gunicorn
+
+load_dotenv()  # Load .env file
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    raise ValueError("OpenAI API Key is missing!")
+
+openai.api_key = OPENAI_API_KEY
 
 # Initialize Flask App
 app = Flask(__name__, template_folder="templates")
+CORS(app)  # Enable CORS to allow API calls from GitHub Pages
 
-import os
-from dotenv import load_dotenv
-
-# Load .env for local development
-load_dotenv()
-
-# Read API key from environment variables (GitHub Secrets) or .env
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# Check if key is missing
-if not OPENAI_API_KEY:
-    raise ValueError("⚠️ OpenAI API Key is missing! Set it in .env or GitHub Secrets.")
+@app.route("/")
+def home():
+    return "Flask API is running on Render!"
 
 # Initialize OpenAI Client
 import openai

@@ -92,7 +92,30 @@
             document.getElementById("startBtn").style.display = "none";  // Hide Start button
             document.getElementById("question").innerText = "Loading...";
             
-            const response = await fetch("/start");
+            const backendURL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+    ? "http://127.0.0.1:5000"  // Local Flask Server
+    : "https://test-m22p.onrender.com"; // Replace with actual deployed API URL
+
+async function startConversation() {
+    document.getElementById("startBtn").style.display = "none";  // Hide Start button
+    document.getElementById("question").innerText = "Loading...";
+
+    try {
+        const response = await fetch(`${backendURL}/start`);
+        if (!response.ok) throw new Error("Server responded with an error");
+        const data = await response.json();
+
+        questions = data.questions;
+        document.getElementById("question").innerText = questions[0];
+        document.getElementById("userInput").style.display = "block";
+        document.getElementById("nextBtn").style.display = "inline-block";
+        questionIndex = 0;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        document.getElementById("question").innerText = "Error connecting to the server.";
+    }
+}
+
             const data = await response.json();
             
             questions = data.questions;
